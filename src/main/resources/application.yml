@@ -1,0 +1,32 @@
+server:
+   #port for the server to run on
+   port: 8080
+
+spring:
+   #To resolve issues with swagger and spring boot 3
+   mvc:
+      pathmatch:
+         matching-strategy: ant_path_matcher
+   datasource:
+      #jdbc url for connecting to Postgres instance
+      url: jdbc:postgresql://${DB_HOST_NAME:localhost}:${DB_PORT:5432}/url_shortener
+      #DB instance credentials
+      username: ${DB_USERNAME:admin}
+      password: ${DB_PASSWORD:admin}
+   jpa:
+      hibernate:
+         ddl-auto: update
+      #Will print all sql statements to the console
+      show-sql: true
+      #Choosing appropriate hibernate dialect
+      database-platform: org.hibernate.dialect.PostgreSQLDialect
+      #Allows generation of Data Definition Language from JPA entities
+      generate-ddl: true
+
+shortened-url:
+   #Characters allowed in the shortened URL keys
+   permissableChars: ${ALLOWED_CHARS:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789}
+   #Length of shortened URL keys (56,800,235,584 unique permutations available)
+   length: ${KEY_LENGTH:6}
+   #Current domain name application is to run on + API path to expand path
+   urlStart: ${DOMAIN:http://localhost:8080/urlapi/1.0/expand/}

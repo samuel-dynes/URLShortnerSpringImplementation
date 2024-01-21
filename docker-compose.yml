@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+   # PostgreSQL Service
+   postgres:
+      image: postgres:latest
+      environment:
+         POSTGRES_DB: url_shortener_db  # Database name
+         POSTGRES_USER: url_shortener_user  # Database user
+         POSTGRES_PASSWORD: url_shortener_password  # Database password
+      ports:
+         - "5432:5432"  # Map host port to container port
+      networks:
+         - url_shortener_network
+
+   # Spring Boot Application Service
+   url_shortener_app:
+      build:
+         context: .
+         dockerfile: Dockerfile
+      ports:
+         - "8080:8080"  # Map host port to container port
+      depends_on:
+         - postgres  # Ensure PostgreSQL service is started first
+      networks:
+         - url_shortener_network
+      environment:
+         SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/url_shortener_db  # Database connection URL
+         SPRING_DATASOURCE_USERNAME: url_shortener_user  # Database user
+         SPRING_DATASOURCE_PASSWORD: url_shortener_password  # Database password
+
+networks:
+   url_shortener_network:
+      driver: bridge
